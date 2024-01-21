@@ -43,5 +43,3 @@ This is a simple customer tracker C++ program that allows users to register cust
 ## License
 
 This customer tracker C++ program is released under the [MIT License](https://raw.githubusercontent.com/johntad110/customer_tracker/main/LICENSE).
-
-```
