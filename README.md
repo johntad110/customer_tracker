@@ -27,7 +27,7 @@ This is a simple customer tracker C++ program that allows users to register cust
 2. Compile the program:
 
    ```bash
-   g++ -o customer_tracker customer_tracker.cpp Customer.cpp
+   g++ -o main.exe main.cpp Customer.cpp
    ```
 
 3. Run the program:
