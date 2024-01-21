@@ -1,6 +1,8 @@
 #include <iostream>
 #include <vector>
 #include <limits>
+#include <iomanip>
+#include <sstream>
 #include "Customer.h"
 
 // Function Prototypes
@@ -110,7 +112,7 @@ void recordPurchase(std::vector<Customer> &customers)
 
             // Record the purchase
             customer.addSale(purchaseAmount);
-            std::cout << "Purchase of amount " << purchaseAmount <<  "recorded successfully for customer ID: " << customerID << std::endl;
+            std::cout << "Purchase of amount " << purchaseAmount << "recorded successfully for customer ID: " << customerID << std::endl;
             break;
         }
     }
@@ -121,27 +123,61 @@ void recordPurchase(std::vector<Customer> &customers)
     }
 }
 
-void generateReport(const std::vector<Customer> &customers)
+void generateReport(const std::vector<Customer>& customers)
 {
-    // Display the end-of-day report
     std::cout << "==== End-of-Day Report ====" << std::endl;
-    for (const auto &customer : customers)
+
+    // Prompt the user for report type
+    std::cout << "Enter 's' for Summary report or 'd' for Detailed report: ";
+    std::string reportType;
+    std::cin >> reportType;
+
+    if (reportType == "d" || reportType == "D")
     {
-        std::cout << "Name: " << customer.getName() << std::endl;
-        std::cout << "Sex: " << customer.getSex() << std::endl;
-        std::cout << "Address: " << customer.getAddress() << std::endl;
-        std::cout << "Unique ID: " << customer.getUniqueID() << std::endl;
-
-        std::cout << "Sales: ";
-        for (const auto &sale : customer.getSales())
+        // Detailed report with tabular format
+        std::cout << "---------------------------------------------------------------" << std::endl;
+        std::cout << "|    Name    |    Sex    |         Address        |  Sales  | Total Sales | Average Sales |" << std::endl;
+        std::cout << "---------------------------------------------------------------" << std::endl;
+        for (const auto& customer : customers)
         {
-            std::cout << sale << " ";
-        }
-        std::cout << std::endl;
+            std::stringstream salesStream;
+            for (const auto& sale : customer.getSales())
+            {
+                salesStream << sale << ", ";
+            }
+            std::string salesStr = salesStream.str();
+            if (!salesStr.empty())
+                salesStr = salesStr.substr(0, salesStr.length() - 2);
 
-        std::cout << "Total Sales: " << customer.getTotalSales() << std::endl;
-        std::cout << "Avarage Sales: " << customer.getAverageSales() << std::endl;
-        std::cout << std::endl;
+            std::cout << "|" << std::setw(12) << customer.getName() << " |"
+                      << std::setw(9) << customer.getSex() << " |"
+                      << std::setw(23) << customer.getAddress() << " |"
+                      << std::setw(9) << salesStr << " |"
+                      << std::setw(12) << customer.getTotalSales() << " |"
+                      << std::setw(14) << customer.getAverageSales() << " |" << std::endl;
+        }
+        std::cout << "---------------------------------------------------------------" << std::endl;
+    }
+    else if (reportType == "s" || reportType == "S")
+    {
+        // Summary report
+        int totalCustomers = customers.size();
+        double totalSales = 0.0;
+        int totalItemsSold = 0;
+
+        for (const auto& customer : customers)
+        {
+            totalSales += customer.getTotalSales();
+            totalItemsSold += customer.getSales().size();
+        }
+
+        std::cout << "Total Customers: " << totalCustomers << std::endl;
+        std::cout << "Total Sales: " << totalSales << std::endl;
+        std::cout << "Total Items Sold: " << totalItemsSold << std::endl;
+    }
+    else
+    {
+        std::cout << "Invalid report type. Please enter 's' for Summary or 'd' for Detailed." << std::endl;
     }
 }
 
